@@ -1,111 +1,97 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.example.trw.sampleroompersistence.fragment.HomeFragment">
 
-    <ScrollView
-        android:scrollbars="none"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+        <EditText
+            android:id="@+id/et_player_name"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:hint="Player Name" />
 
-            <EditText
-                android:id="@+id/et_player_name"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:hint="Player Name" />
+        <RadioGroup
+            android:id="@+id/rg_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <RadioGroup
-                    android:id="@+id/rg_position"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/rb_fw"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="FW" />
-
-                    <RadioButton
-                        android:id="@+id/rb_mf"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="MF" />
-
-                    <RadioButton
-                        android:id="@+id/rb_df"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="DF" />
-
-                    <RadioButton
-                        android:id="@+id/rb_gk"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="GK" />
-                </RadioGroup>
-            </LinearLayout>
-
-            <EditText
-                android:id="@+id/et_player_nationality"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:hint="Player Nationality" />
-
-            <EditText
-                android:id="@+id/et_player_club"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:hint="Player Club" />
-
-            <EditText
-                android:id="@+id/et_player_contract_commence"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:enabled="false"
-                android:gravity="center"
-                android:hint="Contract Commence"
-                android:inputType="number" />
-
-            <EditText
-                android:id="@+id/et_player_contract_exp"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:hint="Contract Expiration"
-                android:inputType="number" />
-
-            <Button
-                android:id="@+id/btn_register"
+            <RadioButton
+                android:id="@+id/rb_fw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Register" />
+                android:text="FW" />
 
+            <RadioButton
+                android:id="@+id/rb_mf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MF" />
 
-        </LinearLayout>
+            <RadioButton
+                android:id="@+id/rb_df"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DF" />
 
-    </ScrollView>
-</LinearLayout>
+            <RadioButton
+                android:id="@+id/rb_gk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GK" />
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/et_player_nationality"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:hint="Player Nationality" />
+
+        <EditText
+            android:id="@+id/et_player_club"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:hint="Player Club" />
+
+        <EditText
+            android:id="@+id/et_player_contract_commence"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:enabled="false"
+            android:gravity="center"
+            android:hint="Contract Commence"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/et_player_contract_exp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:hint="Contract Expiration"
+            android:inputType="number" />
+
+        <Button
+            android:id="@+id/btn_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Register" />
+
+    </LinearLayout>
+
+</ScrollView>
