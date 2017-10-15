@@ -22,7 +22,7 @@ import com.example.trw.sampleroompersistence.R;
 import com.example.trw.sampleroompersistence.db.callback.SendDataCallback;
 import com.example.trw.sampleroompersistence.db.callback.SendListDataCallback;
 import com.example.trw.sampleroompersistence.db.callback.SendStatusCallback;
-import com.example.trw.sampleroompersistence.ui.adapter.CreateItems;
+import com.example.trw.sampleroompersistence.ui.adapter.PlayerItemConverter;
 import com.example.trw.sampleroompersistence.ui.adapter.MainAdapter;
 import com.example.trw.sampleroompersistence.db.dao.InsertData;
 import com.example.trw.sampleroompersistence.db.dao.QueryData;
@@ -94,7 +94,7 @@ public class AwardFragment extends Fragment implements View.OnClickListener
 
     private void setAdapterData(List<PlayerWithAward> listPlayerAward) {
         mainAdapter = new MainAdapter();
-        mainAdapter.setItemList(CreateItems.createPlayerAwardItem(listPlayerAward));
+        mainAdapter.setItemList(PlayerItemConverter.createPlayerAwardItem(listPlayerAward));
         recyclerViewPlayer.setAdapter(mainAdapter);
     }
 

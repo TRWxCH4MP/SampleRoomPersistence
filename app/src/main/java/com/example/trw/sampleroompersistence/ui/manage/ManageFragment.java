@@ -21,7 +21,7 @@ import android.widget.Toast;
 import com.example.trw.sampleroompersistence.R;
 import com.example.trw.sampleroompersistence.db.callback.SendListDataCallback;
 import com.example.trw.sampleroompersistence.db.callback.SendStatusCallback;
-import com.example.trw.sampleroompersistence.ui.adapter.CreateItems;
+import com.example.trw.sampleroompersistence.ui.adapter.PlayerItemConverter;
 import com.example.trw.sampleroompersistence.ui.adapter.MainAdapter;
 import com.example.trw.sampleroompersistence.db.dao.DeleteData;
 import com.example.trw.sampleroompersistence.db.dao.QueryData;
@@ -98,7 +98,7 @@ public class ManageFragment extends Fragment implements
 
     private void setAdapterData(List<PlayerContract> listPlayerContract) {
         mainAdapter = new MainAdapter();
-        mainAdapter.setItemList(CreateItems.createPlayerContractItem(listPlayerContract));
+        mainAdapter.setItemList(PlayerItemConverter.createPlayerContractItem(listPlayerContract));
         recyclerViewPlayer.setAdapter(mainAdapter);
     }
 
