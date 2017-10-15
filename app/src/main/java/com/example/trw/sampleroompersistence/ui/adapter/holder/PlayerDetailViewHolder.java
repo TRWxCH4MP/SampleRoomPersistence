@@ -10,25 +10,24 @@ import com.example.trw.sampleroompersistence.R;
  */
 
 public class PlayerDetailViewHolder extends BaseViewHolder {
-
-    TextView textViewId;
-    TextView textViewNum;
-    TextView textViewName;
-    TextView textViewClub;
-    TextView textViewContract;
+    private TextView textViewId;
+    private TextView textViewNumber;
+    private TextView textViewName;
+    private TextView textViewClub;
+    private TextView textViewContract;
 
     public PlayerDetailViewHolder(View itemView) {
         super(itemView);
 
-        textViewNum = (TextView) itemView.findViewById(R.id.tv_num);
-        textViewId = (TextView) itemView.findViewById(R.id.tv_player_id);
-        textViewName = (TextView) itemView.findViewById(R.id.tv_player_name);
-        textViewClub = (TextView) itemView.findViewById(R.id.tv_player_club);
-        textViewContract = (TextView) itemView.findViewById(R.id.tv_player_contract);
+        textViewNumber = itemView.findViewById(R.id.tv_number);
+        textViewId = itemView.findViewById(R.id.tv_player_id);
+        textViewName = itemView.findViewById(R.id.tv_player_name);
+        textViewClub = itemView.findViewById(R.id.tv_player_club);
+        textViewContract = itemView.findViewById(R.id.tv_player_contract);
     }
 
-    public void setNum(int number) {
-        textViewNum.setText(String.valueOf(number));
+    public void setNumber(int number) {
+        textViewNumber.setText(String.valueOf(number));
     }
 
     public void setId(int playerId) {

@@ -10,7 +10,6 @@ import com.example.trw.sampleroompersistence.R;
  */
 
 public class PlayerAwardViewHolder extends BaseViewHolder {
-
     private TextView textViewNumber;
     private TextView textViewPlayerName;
     private TextView textViewPlayerPosition;
@@ -18,16 +17,14 @@ public class PlayerAwardViewHolder extends BaseViewHolder {
     private TextView textViewAward;
     private TextView textViewAwardSeason;
 
-
     public PlayerAwardViewHolder(View itemView) {
         super(itemView);
-
-        textViewNumber = (TextView) itemView.findViewById(R.id.tv_num);
-        textViewPlayerName = (TextView) itemView.findViewById(R.id.tv_player_name);
-        textViewPlayerPosition = (TextView) itemView.findViewById(R.id.tv_player_position);
-        textViewPlayerClub = (TextView) itemView.findViewById(R.id.tv_player_club);
-        textViewAward = (TextView) itemView.findViewById(R.id.tv_award);
-        textViewAwardSeason = (TextView) itemView.findViewById(R.id.tv_award_season);
+        textViewNumber = itemView.findViewById(R.id.tv_number);
+        textViewPlayerName = itemView.findViewById(R.id.tv_player_name);
+        textViewPlayerPosition = itemView.findViewById(R.id.tv_player_position);
+        textViewPlayerClub = itemView.findViewById(R.id.tv_player_club);
+        textViewAward = itemView.findViewById(R.id.tv_award);
+        textViewAwardSeason = itemView.findViewById(R.id.tv_award_season);
     }
 
     public void setNumber(int number) {
