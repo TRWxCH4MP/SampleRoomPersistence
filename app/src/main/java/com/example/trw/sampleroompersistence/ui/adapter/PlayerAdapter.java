@@ -21,7 +21,6 @@ import java.util.List;
  */
 
 public class PlayerAdapter extends RecyclerView.Adapter<BaseViewHolder> {
-
     private List<BaseItem> itemList = new ArrayList<>();
 
     @Override
@@ -40,23 +39,11 @@ public class PlayerAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public void onBindViewHolder(BaseViewHolder holder, int position) {
-        BaseItem i = itemList.get(position);
-
+        BaseItem item = itemList.get(position);
         if (holder instanceof PlayerDetailViewHolder) {
-            PlayerDetailItem playerDetailItem = (PlayerDetailItem) i;
-            ((PlayerDetailViewHolder) holder).setNum(playerDetailItem.getNum());
-            ((PlayerDetailViewHolder) holder).setId(playerDetailItem.getPlayerId());
-            ((PlayerDetailViewHolder) holder).setName(playerDetailItem.getPlayerName());
-            ((PlayerDetailViewHolder) holder).setClub(playerDetailItem.getPlayerClub());
-            ((PlayerDetailViewHolder) holder).setContract(playerDetailItem.getContractExp());
+            setUpPlayerDetail((PlayerDetailViewHolder) holder, (PlayerDetailItem) item);
         } else if (holder instanceof PlayerAwardViewHolder) {
-            PlayerAwardItem playerAwardItem = (PlayerAwardItem) i;
-            ((PlayerAwardViewHolder) holder).setNumber(playerAwardItem.getNum());
-            ((PlayerAwardViewHolder) holder).setPlayerName(playerAwardItem.getPlayerName());
-            ((PlayerAwardViewHolder) holder).setPlayerPosition(playerAwardItem.getPlayerPosition());
-            ((PlayerAwardViewHolder) holder).setPlayerClub(playerAwardItem.getPlayerClub());
-            ((PlayerAwardViewHolder) holder).setAward(playerAwardItem.getFifaAward());
-            ((PlayerAwardViewHolder) holder).setAwardSeason(playerAwardItem.getFifaAwardSeason());
+            setUpPlayerAward((PlayerAwardViewHolder) holder, (PlayerAwardItem) item);
         }
     }
 
@@ -81,5 +68,22 @@ public class PlayerAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public void setItemList(List<BaseItem> itemList) {
         this.itemList = itemList;
         notifyDataSetChanged();
+    }
+
+    private void setUpPlayerDetail(PlayerDetailViewHolder viewHolder, PlayerDetailItem item) {
+        viewHolder.setNumber(item.getNum());
+        viewHolder.setId(item.getPlayerId());
+        viewHolder.setName(item.getPlayerName());
+        viewHolder.setClub(item.getPlayerClub());
+        viewHolder.setContract(item.getContractExp());
+    }
+
+    private void setUpPlayerAward(PlayerAwardViewHolder viewHolder, PlayerAwardItem item) {
+        viewHolder.setNumber(item.getNum());
+        viewHolder.setPlayerName(item.getPlayerName());
+        viewHolder.setPlayerPosition(item.getPlayerPosition());
+        viewHolder.setPlayerClub(item.getPlayerClub());
+        viewHolder.setAward(item.getFifaAward());
+        viewHolder.setAwardSeason(item.getFifaAwardSeason());
     }
 }
