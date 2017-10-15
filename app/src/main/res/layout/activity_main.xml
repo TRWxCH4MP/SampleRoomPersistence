@@ -6,61 +6,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.trw.sampleroompersistence.MainActivity">
-   
-    <LinearLayout
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_layout_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        app:tabMode="fixed" />
 
-        <TextView
-            android:id="@+id/tv_home"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_margin="1dp"
-            android:layout_weight="1"
-            android:background="#dedede"
-            android:gravity="center"
-            android:text="Home"
-            android:textSize="16dp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tv_award"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_margin="1dp"
-            android:layout_weight="1"
-            android:background="#dedede"
-            android:gravity="center"
-            android:text="Award"
-            android:textSize="16dp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tv_manage"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_margin="1dp"
-            android:layout_weight="1"
-            android:background="#dedede"
-            android:gravity="center"
-            android:text="Manage"
-            android:textSize="16dp"
-            android:textStyle="bold" />
-
-
-    </LinearLayout>
-
-    <LinearLayout
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager_menu"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager_menu"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </android.support.v4.view.ViewPager>
-    </LinearLayout>
+        android:layout_height="match_parent" />
 
 </LinearLayout>
