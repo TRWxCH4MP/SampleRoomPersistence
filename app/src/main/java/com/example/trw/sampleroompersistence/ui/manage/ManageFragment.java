@@ -87,9 +87,7 @@ public class ManageFragment extends Fragment implements
         buttonDeleteAll = view.findViewById(R.id.btn_delete_all);
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout_player_contract);
         recyclerViewPlayer = view.findViewById(R.id.rv_player);
-        recyclerViewPlayer.setLayoutManager(new LinearLayoutManager(getContext()
-                , LinearLayoutManager.VERTICAL
-                , false));
+        recyclerViewPlayer.setLayoutManager(new LinearLayoutManager(getContext()));
         buttonUpdate.setOnClickListener(this);
         buttonDelete.setOnClickListener(this);
         buttonDeleteAll.setOnClickListener(this);
@@ -205,5 +203,4 @@ public class ManageFragment extends Fragment implements
         super.onDestroy();
         FifaDatabase.destroyInstance();
     }
-
 }
