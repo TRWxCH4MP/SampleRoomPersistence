@@ -12,9 +12,9 @@ import java.util.List;
  */
 
 public interface SendListDataCallback {
-    void loadProfileDataCallback(List<ProfileEntity> profileEntity, boolean status);
+    void loadProfileDataCallback(List<ProfileEntity> profileEntity, boolean isSuccess);
 
-    void loadPlayerWithAwardDataCallback(List<PlayerWithAward> awardEntities, boolean status);
+    void loadPlayerWithAwardDataCallback(List<PlayerWithAward> awardEntities, boolean isSuccess);
 
-    void loadPlayerContractCallback(List<PlayerContract> playerContract, boolean status);
+    void loadPlayerContractCallback(List<PlayerContract> playerContract, boolean isSuccess);
 }

@@ -43,6 +43,9 @@ public class AwardFragment extends Fragment implements View.OnClickListener
         , SendListDataCallback, SendStatusCallback, SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = AwardFragment.class.getSimpleName();
 
+    public static final String AWARD_FIFA_FIFPRO_WORLD_XI = "FIFA FIFPro World XI";
+    public static final String AWARD_FIFA_BALLON_D_OR = "FIFA Ballon d'Or";
+
     private EditText editTextPlayerId;
     private EditText editTextAwardSeason;
     private RadioGroup radioGroupAwards;
@@ -50,21 +53,21 @@ public class AwardFragment extends Fragment implements View.OnClickListener
     private TextView textViewPlayerName;
     private Spinner spinnerPlayerName;
     private RecyclerView recyclerViewPlayer;
-    private PlayerAdapter playerAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private PlayerAdapter playerAdapter;
 
-    private String award;
-    private int awardSeason = Calendar.getInstance().get(Calendar.YEAR) - 1;
-    private String inputPlayerId;
-    private List<ProfileEntity> listPlayer = new ArrayList<>();
-    private List<PlayerWithAward> listPlayerAward = new ArrayList<>();
+    private int awardSeason;
+    private List<ProfileEntity> listPlayer;
+    private List<PlayerWithAward> listPlayerAward;
 
     public static AwardFragment newInstance() {
         return new AwardFragment();
     }
 
     public AwardFragment() {
-        // Required empty public constructor
+        awardSeason = Calendar.getInstance().get(Calendar.YEAR) - 1;
+        listPlayer = new ArrayList<>();
+        listPlayerAward = new ArrayList<>();
     }
 
     @Override
@@ -85,11 +88,16 @@ public class AwardFragment extends Fragment implements View.OnClickListener
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout_player_award);
         recyclerViewPlayer = view.findViewById(R.id.rv_player_with_award);
         recyclerViewPlayer.setLayoutManager(new LinearLayoutManager(getContext()));
-        editTextAwardSeason.setText("Season: " + awardSeason);
+        editTextAwardSeason.setText(getString(R.string.season_year, awardSeason));
 
-        radioGroupAwards.setOnClickListener(this);
         buttonVote.setOnClickListener(this);
         swipeRefreshLayout.setOnRefreshListener(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        FifaDatabase.destroyInstance();
     }
 
     private void setAdapterData(List<PlayerWithAward> listPlayerAward) {
@@ -109,41 +117,49 @@ public class AwardFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        switch (radioGroupAwards.getCheckedRadioButtonId()) {
-            case R.id.rb_fifpro:
-                award = "FIFA FIFPro World XI";
-                break;
-            case R.id.rb_ballondor:
-                award = "FIFA Ballon d'Or";
-                break;
-        }
-        switch (v.getId()) {
-            case R.id.btn_vote:
-                inputPlayerId = editTextPlayerId.getText().toString();
-                if (inputPlayerId.isEmpty()
-                        || radioGroupAwards.getCheckedRadioButtonId() == -1) {
-                    Toast.makeText(getContext()
-                            , "Please complete the information !"
-                            , Toast.LENGTH_SHORT)
-                            .show();
-                } else {
-                    int playerId = Integer.parseInt(inputPlayerId);
-                    AwardEntity awardEntity = new AwardEntity();
-                    awardEntity.setPlayerId(playerId);
-                    awardEntity.setFifaAward(award);
-                    awardEntity.setFifaAwardSeason(awardSeason);
-                    InsertData.onInsertAward(getContext(), awardEntity, this);
-                }
-                break;
+        if (v == buttonVote) {
+            votePlayer();
         }
     }
 
+    public void votePlayer() {
+        String votePlayerId = editTextPlayerId.getText().toString();
+        int awardButtonId = radioGroupAwards.getCheckedRadioButtonId();
+        if (isVotePlayerIdInvalid(votePlayerId, awardButtonId)) {
+            showVotePlayerIdInvalid();
+        } else {
+            insertVotePlayerAward(votePlayerId,
+                    getAwardByRadioButtonId(awardButtonId),
+                    awardSeason);
+        }
+    }
+
+    private boolean isVotePlayerIdInvalid(String playerId, int awardButtonId) {
+        return playerId.isEmpty()
+                || awardButtonId == -1;
+    }
+
+    private void showVotePlayerIdInvalid() {
+        Toast.makeText(getContext()
+                , R.string.error_form_invalid
+                , Toast.LENGTH_SHORT)
+                .show();
+    }
+
+    private void insertVotePlayerAward(String votePlayerId, String award, int awardSeason) {
+        int playerId = Integer.parseInt(votePlayerId);
+        AwardEntity awardEntity = new AwardEntity();
+        awardEntity.setPlayerId(playerId);
+        awardEntity.setFifaAward(award);
+        awardEntity.setFifaAwardSeason(awardSeason);
+        InsertData.onInsertAward(getContext(), awardEntity, this);
+    }
+
     @Override
-    public void loadProfileDataCallback(List<ProfileEntity> profileEntity, boolean status) {
-        if (status) {
+    public void loadProfileDataCallback(List<ProfileEntity> profileEntity, boolean isSuccess) {
+        if (isSuccess) {
             listPlayer = profileEntity;
             setSpinnerAdapter();
-
         } else {
             swipeRefreshLayout.setRefreshing(false);
             recyclerViewPlayer.removeAllViewsInLayout();
@@ -152,17 +168,16 @@ public class AwardFragment extends Fragment implements View.OnClickListener
 
     private void setSpinnerAdapter() {
         List<String> listPlayerName = new ArrayList<>();
-        for (int index = 0; index < listPlayer.size(); index++) {
-            listPlayerName.add(listPlayer.get(index).getPlayerName());
+        for (ProfileEntity player : listPlayer) {
+            listPlayerName.add(player.getPlayerName());
         }
-        ArrayAdapter spinnerAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item, listPlayerName);
+        ArrayAdapter spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listPlayerName);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPlayerName.setAdapter(spinnerAdapter);
         spinnerPlayerName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                final String playerName = parent.getItemAtPosition(position).toString();
-
+                String playerName = parent.getItemAtPosition(position).toString();
                 QueryData.onFindPlayerIdWithPlayerName(getContext(), playerName, new SendDataCallback() {
                     @Override
                     public void findPlayerIdCallback(int playerId, boolean status) {
@@ -178,8 +193,8 @@ public class AwardFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public void loadPlayerWithAwardDataCallback(List<PlayerWithAward> playerWithAwards, boolean status) {
-        if (status) {
+    public void loadPlayerWithAwardDataCallback(List<PlayerWithAward> playerWithAwards, boolean isSuccess) {
+        if (isSuccess) {
             swipeRefreshLayout.setRefreshing(false);
             listPlayerAward = playerWithAwards;
             setAdapterData(listPlayerAward);
@@ -187,15 +202,15 @@ public class AwardFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public void loadPlayerContractCallback(List<PlayerContract> playerContract, boolean status) {
+    public void loadPlayerContractCallback(List<PlayerContract> playerContract, boolean isSuccess) {
 
     }
 
     @Override
-    public void checkStatusCallback(boolean status) {
-        if (status) {
+    public void checkStatusCallback(boolean isSuccess) {
+        if (isSuccess) {
             Toast.makeText(getContext()
-                    , "Vote successful"
+                    , R.string.status_vote_successful
                     , Toast.LENGTH_SHORT)
                     .show();
         }
@@ -205,14 +220,18 @@ public class AwardFragment extends Fragment implements View.OnClickListener
     public void onRefresh() {
         QueryData.onLoadPlayerWithAward(getContext(), this);
         Toast.makeText(getContext()
-                , "Update successful"
+                , R.string.status_update_successful
                 , Toast.LENGTH_SHORT)
                 .show();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        FifaDatabase.destroyInstance();
+    private String getAwardByRadioButtonId(int AwardRadioButtonId) {
+        switch (AwardRadioButtonId) {
+            case R.id.rb_fifpro:
+                return AWARD_FIFA_FIFPRO_WORLD_XI;
+            case R.id.rb_ballondor:
+                return AWARD_FIFA_BALLON_D_OR;
+        }
+        return null;
     }
 }

@@ -10,5 +10,7 @@
     <string name="status_update_successful">Update successful</string>
     <string name="error_form_invalid">Please complete the information !</string>
     <string name="status_register_successful">Register successful</string>
+    <string name="status_vote_successful">Vote successful</string>
     <string name="commence_year">Commence: %d</string>
+    <string name="season_year">Season: %d</string>
 </resources>
