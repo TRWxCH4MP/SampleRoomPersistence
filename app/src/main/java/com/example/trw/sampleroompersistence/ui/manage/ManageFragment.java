@@ -21,8 +21,6 @@ import android.widget.Toast;
 import com.example.trw.sampleroompersistence.R;
 import com.example.trw.sampleroompersistence.db.callback.SendListDataCallback;
 import com.example.trw.sampleroompersistence.db.callback.SendStatusCallback;
-import com.example.trw.sampleroompersistence.ui.adapter.PlayerItemConverter;
-import com.example.trw.sampleroompersistence.ui.adapter.PlayerAdapter;
 import com.example.trw.sampleroompersistence.db.dao.DeleteData;
 import com.example.trw.sampleroompersistence.db.dao.QueryData;
 import com.example.trw.sampleroompersistence.db.dao.UpdateData;
@@ -30,6 +28,8 @@ import com.example.trw.sampleroompersistence.db.database.FifaDatabase;
 import com.example.trw.sampleroompersistence.db.entity.PlayerContract;
 import com.example.trw.sampleroompersistence.db.entity.PlayerWithAward;
 import com.example.trw.sampleroompersistence.db.entity.ProfileEntity;
+import com.example.trw.sampleroompersistence.ui.adapter.PlayerAdapter;
+import com.example.trw.sampleroompersistence.ui.adapter.PlayerItemConverter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +37,8 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ManageFragment extends Fragment implements
-        SendListDataCallback
-        , View.OnClickListener
-        , SendStatusCallback
-        , SwipeRefreshLayout.OnRefreshListener {
+public class ManageFragment extends Fragment
+        implements SendListDataCallback, View.OnClickListener, SendStatusCallback, SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = ManageFragment.class.getSimpleName();
 
     private EditText editTextCommence;
@@ -56,17 +53,15 @@ public class ManageFragment extends Fragment implements
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private int playerId;
-    private int playerContractCommence;
-    private int playerContractExp;
 
-    private List<PlayerContract> listPlayerContract = new ArrayList<>();
+    private List<PlayerContract> listPlayerContract;
 
     public static ManageFragment newInstance() {
         return new ManageFragment();
     }
 
     public ManageFragment() {
-        // Required empty public constructor
+        listPlayerContract = new ArrayList<>();
     }
 
     @Override
@@ -101,7 +96,7 @@ public class ManageFragment extends Fragment implements
     }
 
     @Override
-    public void setMenuVisibility(final boolean visible) {
+    public void setMenuVisibility(boolean visible) {
         super.setMenuVisibility(visible);
         if (visible) {
             QueryData.onLoadPlayerWithContract(getContext(), this);
@@ -109,23 +104,22 @@ public class ManageFragment extends Fragment implements
     }
 
     @Override
-    public void loadProfileDataCallback(List<ProfileEntity> profileEntity, boolean status) {
+    public void loadProfileDataCallback(List<ProfileEntity> profileEntity, boolean isSuccess) {
 
     }
 
     @Override
-    public void loadPlayerWithAwardDataCallback(List<PlayerWithAward> awardEntities, boolean status) {
+    public void loadPlayerWithAwardDataCallback(List<PlayerWithAward> awardEntities, boolean isSuccess) {
 
     }
 
     @Override
-    public void loadPlayerContractCallback(List<PlayerContract> playerContract, boolean status) {
-        if (status) {
+    public void loadPlayerContractCallback(List<PlayerContract> playerContract, boolean isSuccess) {
+        if (isSuccess) {
             swipeRefreshLayout.setRefreshing(false);
             listPlayerContract = playerContract;
             setAdapterData(listPlayerContract);
             setSpinnerAdapter();
-
         } else {
             swipeRefreshLayout.setRefreshing(false);
             recyclerViewPlayer.removeAllViewsInLayout();
@@ -134,21 +128,21 @@ public class ManageFragment extends Fragment implements
 
     private void setSpinnerAdapter() {
         List<String> listPlayerName = new ArrayList<>();
-        for (int index = 0; index < listPlayerContract.size(); index++) {
-            listPlayerName.add(listPlayerContract.get(index).getPlayerName());
+        for (PlayerContract playerContract : listPlayerContract) {
+            listPlayerName.add(playerContract.getPlayerName());
         }
-        ArrayAdapter spinnerAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item, listPlayerName);
+        ArrayAdapter spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listPlayerName);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPlayerName.setAdapter(spinnerAdapter);
         spinnerPlayerName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                final String playerName = parent.getItemAtPosition(position).toString();
-                for (int index = 0; index < listPlayerContract.size(); index++) {
-                    if (listPlayerContract.get(index).getPlayerName().equals(playerName)) {
-                        playerId = Integer.parseInt(String.valueOf(listPlayerContract.get(index).getPlayerId()));
-                        editTextCommence.setText(String.valueOf(listPlayerContract.get(index).getPlayerContractCommence()));
-                        editTextExp.setText(String.valueOf(listPlayerContract.get(index).getPlayerContractExp()));
+                String playerName = parent.getItemAtPosition(position).toString();
+                for (PlayerContract playerContract : listPlayerContract) {
+                    if (playerContract.getPlayerName().equals(playerName)) {
+                        playerId = Integer.parseInt(String.valueOf(playerContract.getPlayerId()));
+                        editTextCommence.setText(String.valueOf(playerContract.getPlayerContractCommence()));
+                        editTextExp.setText(String.valueOf(playerContract.getPlayerContractExp()));
                     }
                 }
             }
@@ -161,29 +155,38 @@ public class ManageFragment extends Fragment implements
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_update:
-                playerContractCommence = Integer.parseInt(String.valueOf(editTextCommence.getText().toString().trim()));
-                playerContractExp = Integer.parseInt(String.valueOf(editTextExp.getText().toString().trim()));
-                UpdateData.onUpdateContract(getContext()
-                        , playerId
-                        , playerContractCommence
-                        , playerContractExp
-                        , this);
-                break;
-            case R.id.btn_delete:
-                DeleteData.onDeletePlayerByPlayerId(getContext(), playerId, this);
-                break;
-            case R.id.btn_delete_all:
-                DeleteData.onDeleteAllPlayer(getContext(), this);
+        if (v == buttonUpdate) {
+            updatePlayerProfile();
+        } else if (v == buttonDelete) {
+            deletePlayerByPlayerId();
+        } else if (v == buttonDeleteAll) {
+            deleteAllPlayers();
         }
     }
 
+    private void updatePlayerProfile() {
+        int playerContractCommence = Integer.parseInt(String.valueOf(editTextCommence.getText().toString().trim()));
+        int playerContractExp = Integer.parseInt(String.valueOf(editTextExp.getText().toString().trim()));
+        UpdateData.onUpdateContract(getContext()
+                , playerId
+                , playerContractCommence
+                , playerContractExp
+                , this);
+    }
+
+    private void deletePlayerByPlayerId() {
+        DeleteData.onDeletePlayerByPlayerId(getContext(), playerId, this);
+    }
+
+    private void deleteAllPlayers() {
+        DeleteData.onDeleteAllPlayer(getContext(), this);
+    }
+
     @Override
-    public void checkStatusCallback(boolean status) {
-        if (status) {
+    public void checkStatusCallback(boolean isSuccess) {
+        if (isSuccess) {
             Toast.makeText(getContext()
-                    , "Successful"
+                    , R.string.status_check_successful
                     , Toast.LENGTH_SHORT)
                     .show();
         }
@@ -193,7 +196,7 @@ public class ManageFragment extends Fragment implements
     public void onRefresh() {
         QueryData.onLoadPlayerWithContract(getContext(), this);
         Toast.makeText(getContext()
-                , "Update successful"
+                , R.string.status_update_successful
                 , Toast.LENGTH_SHORT)
                 .show();
     }
