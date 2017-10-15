@@ -6,4 +6,9 @@
     <string name="tab_home">Home</string>
     <string name="tab_award">Award</string>
     <string name="tab_manage">Manage</string>
+    <string name="status_check_successful">Successful</string>
+    <string name="status_update_successful">Update successful</string>
+    <string name="error_form_invalid">Please complete the information !</string>
+    <string name="status_register_successful">Register successful</string>
+    <string name="commence_year">Commence: %d</string>
 </resources>

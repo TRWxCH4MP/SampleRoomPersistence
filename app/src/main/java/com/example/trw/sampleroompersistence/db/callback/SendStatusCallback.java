@@ -6,5 +6,5 @@ package com.example.trw.sampleroompersistence.db.callback;
 
 public interface SendStatusCallback {
 
-    void checkStatusCallback(boolean status);
+    void checkStatusCallback(boolean isSuccess);
 }

@@ -26,6 +26,11 @@ import java.util.Calendar;
 public class HomeFragment extends Fragment implements View.OnClickListener, SendStatusCallback {
     private static final String TAG = HomeFragment.class.getSimpleName();
 
+    public static final String POSITION_FORWARD = "Forward";
+    public static final String POSITION_MID_FIELDER = "Midfielder";
+    public static final String POSITION_DEFENDER = "Defender";
+    public static final String POSITION_GOAL_KEEPER = "Goalkeeper";
+
     private EditText editTextPlayerName;
     private EditText editTextPlayerNationality;
     private EditText editTextPlayerClub;
@@ -34,15 +39,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Send
     private RadioGroup radioGroupPosition;
     private Button buttonRegister;
 
-    private String playerPosition;
-    private int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+    private int currentYear;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
     }
 
     public HomeFragment() {
-        // Required empty public constructor
+        currentYear = Calendar.getInstance().get(Calendar.YEAR);
     }
 
     @Override
@@ -62,80 +66,112 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Send
         radioGroupPosition = view.findViewById(R.id.rg_position);
         buttonRegister = view.findViewById(R.id.btn_register);
 
-        editTextPlayerContractCommence.setText("Commence: " + currentYear);
+        editTextPlayerContractCommence.setText(getString(R.string.commence_year, currentYear));
 
-        radioGroupPosition.setOnClickListener(this);
         buttonRegister.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (radioGroupPosition.getCheckedRadioButtonId()) {
-            case R.id.rb_fw:
-                playerPosition = "Forward";
-                break;
-            case R.id.rb_mf:
-                playerPosition = "Midfielder";
-                break;
-            case R.id.rb_df:
-                playerPosition = "Defender";
-                break;
-            case R.id.rb_gk:
-                playerPosition = "Goalkeeper";
-                break;
-        }
-
-        switch (v.getId()) {
-            case R.id.btn_register:
-                String playerName = editTextPlayerName.getText().toString().trim();
-                String playerNationality = editTextPlayerNationality.getText().toString().trim();
-                String playerClub = editTextPlayerClub.getText().toString().trim();
-                String playerContractCommence = editTextPlayerContractCommence.getText().toString().trim();
-                String playerContractExp = editTextPlayerContractExp.getText().toString().trim();
-                if (playerName.isEmpty()
-                        || playerNationality.isEmpty()
-                        || playerClub.isEmpty()
-                        || playerContractCommence.isEmpty()
-                        || playerContractExp.isEmpty()
-                        || radioGroupPosition.getCheckedRadioButtonId() == -1) {
-                    Toast.makeText(getContext()
-                            , "Please complete the information !"
-                            , Toast.LENGTH_SHORT)
-                            .show();
-                } else {
-                    int contractExp = Integer.parseInt(playerContractExp);
-                    ProfileEntity profile = new ProfileEntity();
-                    profile.setPlayerName(playerName);
-                    profile.setPlayerPosition(playerPosition);
-                    profile.setPlayerNationality(playerNationality);
-                    profile.setPlayerClub(playerClub);
-                    profile.setPlayerContractCommence(currentYear);
-                    profile.setPlayerContractExp(contractExp);
-                    InsertData.onInsertProfile(getContext(), profile, this);
-                }
-                break;
-        }
-    }
-
-    @Override
-    public void checkStatusCallback(boolean status) {
-        if (status) {
-            editTextPlayerName.setText("");
-            radioGroupPosition.clearCheck();
-            editTextPlayerNationality.setText("");
-            editTextPlayerClub.setText("");
-            editTextPlayerContractExp.setText("");
-
-            Toast.makeText(getContext()
-                    , "Register successful"
-                    , Toast.LENGTH_SHORT)
-                    .show();
-        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         FifaDatabase.destroyInstance();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == buttonRegister) {
+            insertPlayerProfile();
+        }
+    }
+
+    @Override
+    public void checkStatusCallback(boolean isSuccess) {
+        if (isSuccess) {
+            clearPlayerProfileForm();
+            Toast.makeText(getContext()
+                    , R.string.status_register_successful
+                    , Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
+
+    private void insertPlayerProfile() {
+        String playerName = editTextPlayerName.getText().toString().trim();
+        String playerNationality = editTextPlayerNationality.getText().toString().trim();
+        String playerClub = editTextPlayerClub.getText().toString().trim();
+        String playerContractExp = editTextPlayerContractExp.getText().toString().trim();
+        int checkedRadioButtonId = radioGroupPosition.getCheckedRadioButtonId();
+        if (isPlayerProfileInvalid(playerName,
+                playerNationality,
+                playerClub,
+                playerContractExp,
+                checkedRadioButtonId)) {
+            showPlayerProfileInvalid();
+        } else {
+            insertPlayerProfileToDatabase(playerName,
+                    playerNationality,
+                    playerClub,
+                    playerContractExp,
+                    getPositionByRadioButton(checkedRadioButtonId),
+                    currentYear);
+        }
+    }
+
+    private boolean isPlayerProfileInvalid(String playerName,
+                                           String playerNationality,
+                                           String playerClub,
+                                           String playerContractExp,
+                                           int checkedRadioButtonId) {
+        return playerName.isEmpty()
+                || playerNationality.isEmpty()
+                || playerClub.isEmpty()
+                || playerContractExp.isEmpty()
+                || checkedRadioButtonId == -1;
+    }
+
+    private void showPlayerProfileInvalid() {
+        Toast.makeText(getContext()
+                , R.string.error_form_invalid
+                , Toast.LENGTH_SHORT)
+                .show();
+    }
+
+    private void insertPlayerProfileToDatabase(String playerName,
+                                               String playerNationality,
+                                               String playerClub,
+                                               String playerContractExp,
+                                               String playerPosition,
+                                               int currentYear) {
+        int contractExp = Integer.parseInt(playerContractExp);
+        ProfileEntity profile = new ProfileEntity();
+        profile.setPlayerName(playerName);
+        profile.setPlayerPosition(playerPosition);
+        profile.setPlayerNationality(playerNationality);
+        profile.setPlayerClub(playerClub);
+        profile.setPlayerContractCommence(currentYear);
+        profile.setPlayerContractExp(contractExp);
+        InsertData.onInsertProfile(getContext(), profile, this);
+    }
+
+    private void clearPlayerProfileForm() {
+        editTextPlayerName.setText("");
+        radioGroupPosition.clearCheck();
+        editTextPlayerNationality.setText("");
+        editTextPlayerClub.setText("");
+        editTextPlayerContractExp.setText("");
+    }
+
+    private String getPositionByRadioButton(int checkedRadioButtonId) {
+        switch (checkedRadioButtonId) {
+            case R.id.rb_fw:
+                return POSITION_FORWARD;
+            case R.id.rb_mf:
+                return POSITION_MID_FIELDER;
+            case R.id.rb_df:
+                return POSITION_DEFENDER;
+            case R.id.rb_gk:
+                return POSITION_GOAL_KEEPER;
+        }
+        return null;
     }
 }
