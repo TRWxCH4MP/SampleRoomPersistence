@@ -23,7 +23,7 @@ import com.example.trw.sampleroompersistence.db.callback.SendDataCallback;
 import com.example.trw.sampleroompersistence.db.callback.SendListDataCallback;
 import com.example.trw.sampleroompersistence.db.callback.SendStatusCallback;
 import com.example.trw.sampleroompersistence.ui.adapter.PlayerItemConverter;
-import com.example.trw.sampleroompersistence.ui.adapter.MainAdapter;
+import com.example.trw.sampleroompersistence.ui.adapter.PlayerAdapter;
 import com.example.trw.sampleroompersistence.db.dao.InsertData;
 import com.example.trw.sampleroompersistence.db.dao.QueryData;
 import com.example.trw.sampleroompersistence.db.database.FifaDatabase;
@@ -50,7 +50,7 @@ public class AwardFragment extends Fragment implements View.OnClickListener
     private TextView textViewPlayerName;
     private Spinner spinnerPlayerName;
     private RecyclerView recyclerViewPlayer;
-    private MainAdapter mainAdapter;
+    private PlayerAdapter playerAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private String award;
@@ -93,9 +93,9 @@ public class AwardFragment extends Fragment implements View.OnClickListener
     }
 
     private void setAdapterData(List<PlayerWithAward> listPlayerAward) {
-        mainAdapter = new MainAdapter();
-        mainAdapter.setItemList(PlayerItemConverter.createPlayerAwardItem(listPlayerAward));
-        recyclerViewPlayer.setAdapter(mainAdapter);
+        playerAdapter = new PlayerAdapter();
+        playerAdapter.setItemList(PlayerItemConverter.createPlayerAwardItem(listPlayerAward));
+        recyclerViewPlayer.setAdapter(playerAdapter);
     }
 
     @Override

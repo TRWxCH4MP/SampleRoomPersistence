@@ -22,7 +22,7 @@ import com.example.trw.sampleroompersistence.R;
 import com.example.trw.sampleroompersistence.db.callback.SendListDataCallback;
 import com.example.trw.sampleroompersistence.db.callback.SendStatusCallback;
 import com.example.trw.sampleroompersistence.ui.adapter.PlayerItemConverter;
-import com.example.trw.sampleroompersistence.ui.adapter.MainAdapter;
+import com.example.trw.sampleroompersistence.ui.adapter.PlayerAdapter;
 import com.example.trw.sampleroompersistence.db.dao.DeleteData;
 import com.example.trw.sampleroompersistence.db.dao.QueryData;
 import com.example.trw.sampleroompersistence.db.dao.UpdateData;
@@ -48,7 +48,7 @@ public class ManageFragment extends Fragment implements
     private EditText editTextExp;
     private TextView textViewTo;
     private RecyclerView recyclerViewPlayer;
-    private MainAdapter mainAdapter;
+    private PlayerAdapter playerAdapter;
     private Spinner spinnerPlayerName;
     private Button buttonUpdate;
     private Button buttonDelete;
@@ -97,9 +97,9 @@ public class ManageFragment extends Fragment implements
     }
 
     private void setAdapterData(List<PlayerContract> listPlayerContract) {
-        mainAdapter = new MainAdapter();
-        mainAdapter.setItemList(PlayerItemConverter.createPlayerContractItem(listPlayerContract));
-        recyclerViewPlayer.setAdapter(mainAdapter);
+        playerAdapter = new PlayerAdapter();
+        playerAdapter.setItemList(PlayerItemConverter.createPlayerContractItem(listPlayerContract));
+        recyclerViewPlayer.setAdapter(playerAdapter);
     }
 
     @Override
