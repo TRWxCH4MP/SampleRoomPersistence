@@ -133,7 +133,8 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_player_with_award"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            tools:listitem="@layout/list_player_award" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

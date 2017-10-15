@@ -61,7 +61,8 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_player"
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
+                android:layout_height="200dp"
+                tools:listitem="@layout/list_player_contract">
 
             </android.support.v7.widget.RecyclerView>
 
