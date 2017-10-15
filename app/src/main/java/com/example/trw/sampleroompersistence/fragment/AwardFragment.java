@@ -1,14 +1,11 @@
 package com.example.trw.sampleroompersistence.fragment;
 
-import android.arch.lifecycle.LifecycleFragment;
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,59 +41,55 @@ import java.util.List;
  */
 public class AwardFragment extends Fragment implements View.OnClickListener
         , SendListDataCallback, SendStatusCallback, SwipeRefreshLayout.OnRefreshListener {
+    private static final String TAG = AwardFragment.class.getSimpleName();
 
-    String TAG = "AwardFragment";
-    EditText editTextPlayerId;
-    EditText editTextAwardSeason;
-    RadioGroup radioGroupAwards;
-    Button buttonVote;
-    TextView textViewPlayerName;
-    Spinner spinnerPlayerName;
-    RecyclerView recyclerViewPlayer;
-    MainAdapter mainAdapter;
-    SwipeRefreshLayout swipeRefreshLayout;
+    private EditText editTextPlayerId;
+    private EditText editTextAwardSeason;
+    private RadioGroup radioGroupAwards;
+    private Button buttonVote;
+    private TextView textViewPlayerName;
+    private Spinner spinnerPlayerName;
+    private RecyclerView recyclerViewPlayer;
+    private MainAdapter mainAdapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
-    String award;
-    int awardSeason = Calendar.getInstance().get(Calendar.YEAR) - 1;
-    String inputPlayerId;
-    List<ProfileEntity> listPlayer = new ArrayList<>();
-    List<PlayerWithAward> listPlayerAward = new ArrayList<>();
+    private String award;
+    private int awardSeason = Calendar.getInstance().get(Calendar.YEAR) - 1;
+    private String inputPlayerId;
+    private List<ProfileEntity> listPlayer = new ArrayList<>();
+    private List<PlayerWithAward> listPlayerAward = new ArrayList<>();
+
+    public static AwardFragment newInstance() {
+        return new AwardFragment();
+    }
 
     public AwardFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view;
-        view = inflater.inflate(R.layout.fragment_award, container, false);
-
-        initializeUI(view);
-
-        return view;
+        return inflater.inflate(R.layout.fragment_award, container, false);
     }
 
-    private void initializeUI(View view) {
-        editTextPlayerId = (EditText) view.findViewById(R.id.et_player_id);
-        editTextAwardSeason = (EditText) view.findViewById(R.id.et_award_season);
-        radioGroupAwards = (RadioGroup) view.findViewById(R.id.rg_awards);
-        buttonVote = (Button) view.findViewById(R.id.btn_vote);
-        textViewPlayerName = (TextView) view.findViewById(R.id.tv_player_id);
-        spinnerPlayerName = (Spinner) view.findViewById(R.id.spinner_player_name);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_player_award);
-        recyclerViewPlayer = (RecyclerView) view.findViewById(R.id.rv_player_with_award);
-        recyclerViewPlayer.setLayoutManager(new LinearLayoutManager(getContext()
-                , LinearLayoutManager.VERTICAL
-                , false));
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        editTextPlayerId = view.findViewById(R.id.et_player_id);
+        editTextAwardSeason = view.findViewById(R.id.et_award_season);
+        radioGroupAwards = view.findViewById(R.id.rg_awards);
+        buttonVote = view.findViewById(R.id.btn_vote);
+        textViewPlayerName = view.findViewById(R.id.tv_player_id);
+        spinnerPlayerName = view.findViewById(R.id.spinner_player_name);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout_player_award);
+        recyclerViewPlayer = view.findViewById(R.id.rv_player_with_award);
+        recyclerViewPlayer.setLayoutManager(new LinearLayoutManager(getContext()));
         editTextAwardSeason.setText("Season: " + awardSeason);
 
         radioGroupAwards.setOnClickListener(this);
         buttonVote.setOnClickListener(this);
         swipeRefreshLayout.setOnRefreshListener(this);
-
     }
 
     private void setAdapterData(List<PlayerWithAward> listPlayerAward) {

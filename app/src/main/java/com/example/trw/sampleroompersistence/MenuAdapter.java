@@ -14,6 +14,7 @@ import com.example.trw.sampleroompersistence.fragment.ManageFragment;
  */
 
 public class MenuAdapter extends FragmentPagerAdapter {
+    private static final int PAGE_COUNT = 3;
     private Context context;
 
     public MenuAdapter(FragmentManager fm, Context context) {
@@ -23,18 +24,20 @@ public class MenuAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        if (position == 0)
-            return new HomeFragment();
-        else if (position == 1)
-            return new AwardFragment();
-        else if (position == 2)
-            return new ManageFragment();
-        return null;
+        if (position == 0) {
+            return HomeFragment.newInstance();
+        } else if (position == 1) {
+            return AwardFragment.newInstance();
+        } else if (position == 2) {
+            return ManageFragment.newInstance();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return PAGE_COUNT;
     }
 
     @Override

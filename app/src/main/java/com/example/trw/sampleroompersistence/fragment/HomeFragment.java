@@ -1,13 +1,9 @@
 package com.example.trw.sampleroompersistence.fragment;
 
 
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,36 +13,33 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.trw.sampleroompersistence.R;
-import com.example.trw.sampleroompersistence.callback.SendListDataCallback;
 import com.example.trw.sampleroompersistence.callback.SendStatusCallback;
-import com.example.trw.sampleroompersistence.recyclerview.CreateItems;
-import com.example.trw.sampleroompersistence.recyclerview.MainAdapter;
 import com.example.trw.sampleroompersistence.room.dao.InsertData;
-import com.example.trw.sampleroompersistence.room.dao.QueryData;
 import com.example.trw.sampleroompersistence.room.database.FifaDatabase;
-import com.example.trw.sampleroompersistence.room.entity.AwardEntity;
 import com.example.trw.sampleroompersistence.room.entity.ProfileEntity;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment implements View.OnClickListener, SendStatusCallback {
+    private static final String TAG = HomeFragment.class.getSimpleName();
 
-    String TAG = "main";
-    EditText editTextPlayerName;
-    EditText editTextPlayerNationality;
-    EditText editTextPlayerClub;
-    EditText editTextPlayerContractCommence;
-    EditText editTextPlayerContractExp;
-    RadioGroup radioGroupPosition;
-    Button buttonRegister;
+    private EditText editTextPlayerName;
+    private EditText editTextPlayerNationality;
+    private EditText editTextPlayerClub;
+    private EditText editTextPlayerContractCommence;
+    private EditText editTextPlayerContractExp;
+    private RadioGroup radioGroupPosition;
+    private Button buttonRegister;
 
-    String playerPosition;
-    int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+    private String playerPosition;
+    private int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+
+    public static HomeFragment newInstance() {
+        return new HomeFragment();
+    }
 
     public HomeFragment() {
         // Required empty public constructor
@@ -55,23 +48,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Send
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view;
-        view = inflater.inflate(R.layout.fragment_home, container, false);
-
-        initializeUI(view);
-
-        return view;
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
-    private void initializeUI(View view) {
-        editTextPlayerName = (EditText) view.findViewById(R.id.et_player_name);
-        editTextPlayerNationality = (EditText) view.findViewById(R.id.et_player_nationality);
-        editTextPlayerClub = (EditText) view.findViewById(R.id.et_player_club);
-        editTextPlayerContractCommence = (EditText) view.findViewById(R.id.et_player_contract_commence);
-        editTextPlayerContractExp = (EditText) view.findViewById(R.id.et_player_contract_exp);
-        radioGroupPosition = (RadioGroup) view.findViewById(R.id.rg_position);
-        buttonRegister = (Button) view.findViewById(R.id.btn_register);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        editTextPlayerName = view.findViewById(R.id.et_player_name);
+        editTextPlayerNationality = view.findViewById(R.id.et_player_nationality);
+        editTextPlayerClub = view.findViewById(R.id.et_player_club);
+        editTextPlayerContractCommence = view.findViewById(R.id.et_player_contract_commence);
+        editTextPlayerContractExp = view.findViewById(R.id.et_player_contract_exp);
+        radioGroupPosition = view.findViewById(R.id.rg_position);
+        buttonRegister = view.findViewById(R.id.btn_register);
 
         editTextPlayerContractCommence.setText("Commence: " + currentYear);
 
@@ -141,7 +130,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Send
                     , "Register successful"
                     , Toast.LENGTH_SHORT)
                     .show();
-
         }
     }
 

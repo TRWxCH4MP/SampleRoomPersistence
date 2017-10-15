@@ -1,13 +1,12 @@
 package com.example.trw.sampleroompersistence.fragment;
 
 
-import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,56 +42,54 @@ public class ManageFragment extends Fragment implements
         , View.OnClickListener
         , SendStatusCallback
         , SwipeRefreshLayout.OnRefreshListener {
-    String TAG = "ManageFragment";
-    EditText editTextCommence;
-    EditText editTextExp;
-    TextView textViewTo;
-    RecyclerView recyclerViewPlayer;
-    MainAdapter mainAdapter;
-    Spinner spinnerPlayerName;
-    Button buttonUpdate;
-    Button buttonDelete;
-    Button buttonDeleteAll;
-    SwipeRefreshLayout swipeRefreshLayout;
+    private static final String TAG = ManageFragment.class.getSimpleName();
 
-    int playerId;
-    int playerContractCommence;
-    int playerContractExp;
+    private EditText editTextCommence;
+    private EditText editTextExp;
+    private TextView textViewTo;
+    private RecyclerView recyclerViewPlayer;
+    private MainAdapter mainAdapter;
+    private Spinner spinnerPlayerName;
+    private Button buttonUpdate;
+    private Button buttonDelete;
+    private Button buttonDeleteAll;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
+    private int playerId;
+    private int playerContractCommence;
+    private int playerContractExp;
 
-    List<PlayerContract> listPlayerContract = new ArrayList<>();
+    private List<PlayerContract> listPlayerContract = new ArrayList<>();
+
+    public static ManageFragment newInstance() {
+        return new ManageFragment();
+    }
 
     public ManageFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view;
-        view = inflater.inflate(R.layout.fragment_manage, container, false);
-
-        initializeUI(view);
-
-        return view;
+        return inflater.inflate(R.layout.fragment_manage, container, false);
     }
 
-    private void initializeUI(View view) {
-        editTextCommence = (EditText) view.findViewById(R.id.et_contract_commence);
-        editTextExp = (EditText) view.findViewById(R.id.et_contract_exp);
-        textViewTo = (TextView) view.findViewById(R.id.tv_to);
-        spinnerPlayerName = (Spinner) view.findViewById(R.id.spinner_player_name);
-        buttonUpdate = (Button) view.findViewById(R.id.btn_update);
-        buttonDelete = (Button) view.findViewById(R.id.btn_delete);
-        buttonDeleteAll = (Button) view.findViewById(R.id.btn_delete_all);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_player_contract);
-        recyclerViewPlayer = (RecyclerView) view.findViewById(R.id.rv_player);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        editTextCommence = view.findViewById(R.id.et_contract_commence);
+        editTextExp = view.findViewById(R.id.et_contract_exp);
+        textViewTo = view.findViewById(R.id.tv_to);
+        spinnerPlayerName = view.findViewById(R.id.spinner_player_name);
+        buttonUpdate = view.findViewById(R.id.btn_update);
+        buttonDelete = view.findViewById(R.id.btn_delete);
+        buttonDeleteAll = view.findViewById(R.id.btn_delete_all);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout_player_contract);
+        recyclerViewPlayer = view.findViewById(R.id.rv_player);
         recyclerViewPlayer.setLayoutManager(new LinearLayoutManager(getContext()
                 , LinearLayoutManager.VERTICAL
                 , false));
-
         buttonUpdate.setOnClickListener(this);
         buttonDelete.setOnClickListener(this);
         buttonDeleteAll.setOnClickListener(this);
@@ -166,7 +163,7 @@ public class ManageFragment extends Fragment implements
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btn_update:
                 playerContractCommence = Integer.parseInt(String.valueOf(editTextCommence.getText().toString().trim()));
                 playerContractExp = Integer.parseInt(String.valueOf(editTextExp.getText().toString().trim()));
